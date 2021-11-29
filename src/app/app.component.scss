@@ -1,0 +1,96 @@
+.header {
+    padding: 12px 0;
+    text-align: center;
+    background-color: #000;
+    color: #fff;
+}
+
+.folder-structure {
+    padding: 20px;
+
+    ul {
+        ul {
+            padding-left: 15px;
+
+            .folder {
+                position: relative;
+                &:after {
+                    position: absolute;
+                    content: "";
+                    width: 10px;
+                    left: 0;
+                    border-top: 1px solid #000;
+                }
+            }
+
+            li {
+                position: relative;
+                &:before {
+                    position: absolute;
+                    content: "";
+                    border-left: 1px solid #000;
+                    height: 100%;
+                    top: 0;
+                    left: 0;
+                }
+
+                &:last-child {
+                    &:before {
+                        height: 50%;
+                    }
+                }
+            }
+        }
+    }
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.folder {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    cursor: pointer;
+
+    mat-icon {
+        margin-right: 5px;
+    }
+
+    > button {
+        border: 1px solid #ddd;
+        background-color: #eee;
+        height: 25px;
+        margin-left: 6px;
+    }
+}
+
+.add-new-folder {
+    display: flex;
+    border: 1px solid #111;
+    padding: 5px 6px;
+    border-radius: 5px;
+
+    button {
+        margin-left: 5px;
+        height: 30px;
+        width: 30px;
+        line-height: 30px;
+
+        mat-icon {
+            margin-right: 0;
+            font-size: 18px;
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
+        }
+    }
+}
+
+.add-button {
+    background-color: #333;
+    color: #fff;
+}
