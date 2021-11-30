@@ -50,6 +50,7 @@ export class AppComponent {
    * @param folder element which need to remove from the array list.
    */
   public removeNode( folder : FolderModel ) : void {
+    console.log( folder )
     this.removeObjectById( this.folders, folder.id );
   }
 
@@ -63,7 +64,7 @@ export class AppComponent {
       if ( folder.id ===  id ) {
         folders.splice( index, 1 );
         return;
-      } else {
+      } else if ( folder.children ) {
         this.removeObjectById( folder.children, id );
       }
     } );
@@ -77,8 +78,7 @@ export class AppComponent {
     return new FolderModel( {
       type,
       name: '',
-      children: [],
-      id : new Date().toDateString(),
+      id : String(new Date().getTime()),
     } );
   }
 }

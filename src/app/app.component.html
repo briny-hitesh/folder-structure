@@ -17,8 +17,16 @@
     <div class="folder">
         <!-- Condition if name is not defined allow user to add name for the folder/file -->
         <ng-container *ngIf="folder.name; else addNew">
-            <mat-icon>{{ ( folder.type === nodeTypes.folder ) ? 'folder' : 'description' }}</mat-icon>
-            <span class="text">{{folder.name}}</span>
+            <div class="folder-box">
+                <mat-icon>{{ ( folder.type === nodeTypes.folder ) ? 'folder' : 'description' }}</mat-icon>
+                <span class="text">{{folder.name}}</span>
+                <button mat-icon-button *ngIf="( folder.type === nodeTypes.folder )" color="primary" (click)="addNewNode( folder, nodeTypes.folder )">
+                    <mat-icon>add</mat-icon>
+                </button>
+                <button mat-icon-button color="dark" (click)="removeNode( folder )">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
         </ng-container>
         <!-- Form where user can enter name with option to cancel and update name. Cancel will remove the node from array -->
         <ng-template #addNew>
@@ -41,7 +49,7 @@
             </ng-template>
         </ng-container>
         <!-- Options buttons to add file or folder under the root or sub root folder -->
-        <li *ngIf="folder.name">
+        <li *ngIf="folder.name && folder.type === nodeTypes.folder" class="options">
             <div class="folder">
                 <button (click)="addNewNode( folder, nodeTypes.file )">File</button>
                 <button (click)="addNewNode( folder , nodeTypes.folder )">Folder</button>
@@ -51,3 +59,7 @@
   </li>
   
 </ng-template>
+
+<div class="text-area">
+    {{ folders | json }}
+</div>

@@ -25,6 +25,7 @@
 
             li {
                 position: relative;
+
                 &:before {
                     position: absolute;
                     content: "";
@@ -38,6 +39,18 @@
                     &:before {
                         height: 50%;
                     }
+                }
+            }
+        }
+
+        li {
+            .options {
+                display: none;
+            }
+
+            &:hover {
+                .options {
+                    display: block;
                 }
             }
         }
@@ -68,10 +81,12 @@ ul {
     }
 }
 
-.add-new-folder {
+.add-new-folder,
+.folder-box {
     display: flex;
-    border: 1px solid #111;
-    padding: 5px 6px;
+    padding: 0px 3px;
+    border: 1px solid transparent;
+    align-items: center;
     border-radius: 5px;
 
     button {
@@ -90,7 +105,26 @@ ul {
     }
 }
 
+.add-new-folder {
+    border-color: #000;
+}
+
 .add-button {
     background-color: #333;
     color: #fff;
+}
+
+.folder-box {
+    > button {
+        opacity: 0;
+        pointer-events: none;
+    }
+    &:hover {
+        border-color: #000;
+
+        > button {
+            opacity: 1;
+            pointer-events: inherit;
+        }
+    }
 }
