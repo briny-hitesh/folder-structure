@@ -2,29 +2,32 @@
 <div class="folder-structure">
     <button mat-raised-button class="add-button" (click)="addFolderToRoot()">Add folder to root</button>
     <ul>
-        <ng-container *ngFor="let folder of folders">
+        <ng-container *ngFor="let item of folders">
             <ng-template
                 [ngTemplateOutlet]="folderTemplateRef"
-                [ngTemplateOutletContext]="{ folder: folder }">
+                [ngTemplateOutletContext]="{ folder: item }">
             </ng-template>
         </ng-container>
     </ul>
 </div>
 
-<ng-template #folderTemplateRef let-folder="folder" let-parentId="parentId">
+<!-- Ng template to handle endless loop for the children -->
+<ng-template #folderTemplateRef let-folder="folder">
   <li>
     <div class="folder">
+        <!-- Condition if name is not defined allow user to add name for the folder/file -->
         <ng-container *ngIf="folder.name; else addNew">
-            <mat-icon>{{ ( folder.type === 'folder' ) ? 'folder' : 'description' }}</mat-icon>
+            <mat-icon>{{ ( folder.type === nodeTypes.folder ) ? 'folder' : 'description' }}</mat-icon>
             <span class="text">{{folder.name}}</span>
         </ng-container>
+        <!-- Form where user can enter name with option to cancel and update name. Cancel will remove the node from array -->
         <ng-template #addNew>
             <div class="add-new-folder">
                 <input [(ngModel)]="fileName">
-                <button mat-icon-button color="primary" (click)="updateName( folder )">
+                <button mat-icon-button color="primary" (click)="updateAndSaveNode( folder )">
                     <mat-icon>check</mat-icon>
                 </button>
-                <button mat-icon-button color="dark" (click)="removeFolder( folder )">
+                <button mat-icon-button color="dark" (click)="removeNode( folder )">
                     <mat-icon>close</mat-icon>
                 </button>
             </div>
@@ -37,10 +40,11 @@
                 [ngTemplateOutletContext]="{ folder: subFolder }">
             </ng-template>
         </ng-container>
+        <!-- Options buttons to add file or folder under the root or sub root folder -->
         <li *ngIf="folder.name">
             <div class="folder">
-                <button (click)="addFileName( folder )">File</button>
-                <button (click)="addFileName( folder , 'folder' )">Folder</button>
+                <button (click)="addNewNode( folder, nodeTypes.file )">File</button>
+                <button (click)="addNewNode( folder , nodeTypes.folder )">Folder</button>
             </div>
         </li>
     </ul>

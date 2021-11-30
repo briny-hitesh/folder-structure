@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FolderModel } from './app.model';
+import { FolderModel, NODE_TYPES } from './app.model';
 
 @Component({
   selector: 'app-root',
@@ -7,48 +7,57 @@ import { FolderModel } from './app.model';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  public folders : FolderModel[] = [];
+  public folders : FolderModel[] = []; // Array of folder/file list
 
-  public fileName: string = '';
+  public fileName: string = ''; // NgModel ref for the folder/file name.
 
-  public addFileName( folder : FolderModel, type : 'file' | 'folder' = 'file' ) : void {
-    if (folder.children) {
-      folder.children.push( {
-        name: '',
-        type: type,
-        children: [],
-        id: new Date().toDateString()
-      } )
+  public nodeTypes : typeof NODE_TYPES = NODE_TYPES; // Allowed type to crete folder/file node
+
+  /**
+   * Function used to add blank node that allow user to add name and save.
+   * @param folder element where need to add sub item in children 
+   * @param type Define the type of node. Default : file
+   */
+  public addNewNode( folder : FolderModel, type : NODE_TYPES = NODE_TYPES.file ) : void {
+    if (!folder.children) { // Check point if there is children undefined some how. It will add blank array.
+      folder.children = [];
     }
+    // Append new node with blank name.
+    folder.children.push( this.createBlankNode( type ) );
   }
 
-  public updateName( folder : FolderModel ) {
-    if ( this.fileName ) {
+  /**
+   * Function will update name of the node and update in list. 
+   * @param folder node ref where need to update the name.
+   */
+  public updateAndSaveNode( folder : FolderModel ) {
+    if ( this.fileName.trim() ) { // this will check that filename will not blank
       folder.name = this.fileName;
       this.fileName = '';
     }
   }
 
-  public addFolderName( folder : FolderModel ) : void {
-    if (!folder.children) {
-      folder.children = [];  
-    }
-    folder.children.push( {
-      name: '',
-      type: 'file',
-      children: [],
-      id: new Date().toDateString()
-    } );
-  }
-
+  /**
+   * add new node in to root.
+   */
   public addFolderToRoot() : void {
-    this.folders.push( new FolderModel( { name : '', children: [], type: 'folder', id: new Date().toDateString() } ) );
+    // Append new node with blank name in root.
+    this.folders.push( this.createBlankNode( NODE_TYPES.folder ) );
   }
 
-  public removeFolder( folder : FolderModel ) : void {
+  /**
+   * Function that trigger a function to find element and remove node from array.
+   * @param folder element which need to remove from the array list.
+   */
+  public removeNode( folder : FolderModel ) : void {
     this.removeObjectById( this.folders, folder.id );
   }
 
+  /**
+   * Function to find element and remove node from array.
+   * @param folders Array list where needs to find the node index to remove it.
+   * @param id used to find node.
+   */
   public removeObjectById( folders : FolderModel[], id : string ) : void {
     folders.forEach( ( folder : FolderModel, index : number ) => {
       if ( folder.id ===  id ) {
@@ -57,6 +66,19 @@ export class AppComponent {
       } else {
         this.removeObjectById( folder.children, id );
       }
+    } );
+  }
+
+  /**
+   * Function that return folder/file node.
+   * @param type of the new node. default : file
+   */
+  public createBlankNode( type : NODE_TYPES = NODE_TYPES.file ) {
+    return new FolderModel( {
+      type,
+      name: '',
+      children: [],
+      id : new Date().toDateString(),
     } );
   }
 }
